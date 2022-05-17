@@ -4,7 +4,7 @@
 [![CC BY 4.0][cc-by-shield]][cc-by]
 [![CC BY-ND 4.0][cc-by-nd-shield]][cc-by-nd]
 
-This thesis is written using [LaTeX](https://www.latex-project.org/).
+This thesis is written using [LaTeX](https://www.latex-project.org/). You can download the PDF of this thesis [here](https://github.com/irgendwr/bachelor-thesis/releases/download/release/thesis.pdf).
 
 ## Abstract
 

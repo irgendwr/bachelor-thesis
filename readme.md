@@ -13,8 +13,8 @@ Files:
 - `img/` - images
 - `references.bib` - references
 - `style.tex` - style and settings
-- `expose.tex` - exposé
-- `hinweiseabschlussarbeit.tex` guidelines
+
+The source code of the browser extension developed as part of this thesis can be found here: [wam-detector](https://github.com/irgendwr/wam-detector)
 
 ## Build
 

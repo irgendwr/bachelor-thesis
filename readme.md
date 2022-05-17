@@ -6,7 +6,14 @@
 
 This thesis is written using [LaTeX](https://www.latex-project.org/).
 
-Files:
+## Abstract
+
+> Modern web browsers offer a plethora of JavaScript APIs, which provide functionality ranging from sending HTTP requests to signing and encrypting data via the Web Cryptography API. Web applications are highly dependent on these native browser APIs due to their ease of use, added functionality, and efficiency. The APIs are accessible through JavaScript as normal objects and functions and can be overwritten by all scripts executed within the same site. While polyfill libraries make legitimate use of this property, third-party code included in web applications is also able to overwrite the functions, which can allow attackers to overwrite APIs with malicious code and thus manipulate the behavior of the web application and grant access to its data.
+> 
+> This thesis assesses threats posed by browser API overwriting and investigates its prevalence on real-world websites. In order to determine the prevalence of API overwriting, a browser extension and an automated analysis tool were developed and used to conduct an empirical evaluation of the 16 000 most popular websites of the Tranco list. The threats presented in this thesis show that API overwriting allows attackers to gain access to private data, manipulate user interactions and cause a denial of service. The evaluation determined that it is common practice to overwrite APIs, with the most common usage being the tracking of user behavior for analytics purposes. As part of a case study, this thesis also reverse engineered the code responsible for a seemingly suspicious overwrite of a Cryptography API.
+
+
+## Files
 
 - `thesis.tex` - main document
 - `chapter/*.tex` - chapters and sections

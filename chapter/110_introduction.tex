@@ -1,0 +1,15 @@
+\chapter{Introduction}
+\label{sec.introduction}
+
+% Arabic page numbers for the actual content
+\pagenumbering{arabic}
+
+Modern web browsers offer a plethora of JavaScript \acsp{api}, which provide efficient implementations of functionality ranging from sending \acs{http} requests with fetch \cite{fetch} to signing and encrypting data via the Web Cryptography \acs{api} \cite{crypto}.
+These \acsp{api} are accessible through JavaScript as normal objects and functions and can be overwritten by all scripts executed within the same site. As the support and implementations of browser \acsp{api} vary depending on the browser engine and its version, so-called “polyfill” libraries make legitimate use of this property to guarantee the availability of certain \acsp{api} by overwriting the associated properties and implementing missing functionality independently of the browser.
+
+However, the ability to overwrite browser \acsp{api} also makes it possible for attackers to manipulate their behavior by replacing them with malicious implementations. This could, for example, allow attackers to gain access to private data, manipulate user interactions, cause a denial of service or read clear-text before it is encrypted.
+
+While these attacks require code execution, it is important to consider that the inclusion of external JavaScript libraries is not only common practice, but has also seen an increase in the amount of inclusions as well as third-party sites that are depended on \cite{JSinclusions}. This is further complicated by the fact that over 40\% of websites include external JavaScript resources that additionally include third-party scripts themselves \cite{ThirdPartyResources}, creating a chain of inclusions that could lead to implicitly loading malicious code.
+
+Aside from investigating the abilities and implications of overwriting browser \acsp{api}, a proof-of-concept browser extension will be developed that recognizes and summarizes suspicious behavior, such as overwriting of important \acsp{api}, to assist web application developers and users in detecting potentially malicious browser \acs{api} manipulation.
+Furthermore, an automated architecture will be implemented that will be used to perform an empirical evaluation to determine the prevalence of \acs{api} overwriting on real-world websites by verifying the top \num[round-precision=0]{16000} websites of the Tranco list \cite{Tranco}.

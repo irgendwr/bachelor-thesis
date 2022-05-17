@@ -1,0 +1,5 @@
+{
+    "latex-workshop.bibtex-format.trailingComma": true,
+    "editor.wordWrap": "on",
+    "gitlens.currentLine.scrollable": false
+}

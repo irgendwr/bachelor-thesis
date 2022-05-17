@@ -1,0 +1,142 @@
+%!TEX encoding = UTF-8 Unicode
+% ================================================================================
+\documentclass[
+    fontsize=12pt,
+    headings=small,
+    parskip=half,           % Replaces manually placing parskip/parindent.
+    bibliography=totoc,
+    numbers=noenddot,       % No dot after chapter numbers.
+    open=any,               % Chapters can start on any page.
+    final                   % Removes TODOs and draft notice.
+]{scrreprt}
+% ================================================================================
+\include{style}
+\usepackage{graphicx}
+\graphicspath{./img/}
+% ================================================================================
+
+\title{Dangers and Prevalence of\\ Client-Side Web API Manipulations}
+\author{Jonas Bögle de Araújo}
+\date{17.05.2022} % Set a fixed date.
+% \date{May 17, 2022}
+
+\addbibresource{references.bib}
+\begin{document}
+
+
+\begin{titlepage}
+
+% Roman page numbers for everything before the actual content starts
+\pagenumbering{roman}
+
+\includegraphics[width=6.8cm]{img/up-uhh-logo-u-2010-u-farbe-u-rgb.pdf}
+\begin{center}\Large
+    \vfill
+    Bachelor Thesis
+    \vfill
+    \makeatletter
+    {\Large\textsf{\textbf{\@title}}\par}
+    \makeatother
+    \vfill
+    presented by
+    \par\bigskip
+    \makeatletter
+    {\@author} \par
+    \makeatother
+    Student ID No. 7200785\\
+    B.Sc. Software-System-Engineering \par
+    MIN Faculty, Department of Computer Science
+    \vfill
+    \makeatletter
+    submitted on {\@date}
+    \makeatother
+    \vfill
+
+    First Reviewer: Prof. Dr. Hannes Federrath\\
+    Second Reviewer: Dr. Daniel Demmler\\
+    Supervisor: Pascal Wichmann
+\end{center}
+\end{titlepage}
+
+
+
+% ================================= Task ===============================
+\input{chapter/010_task.tex}
+
+
+% =============================== Abstract =============================
+\input{chapter/020_abstract.tex}
+
+
+% ========================== Table of Contents =========================
+\tableofcontents
+
+
+% ============================ Introduction ============================
+\input{chapter/110_introduction.tex}
+
+
+% ============================ Fundamentals ============================
+\input{chapter/120_fundamentals.tex}
+
+
+% ============================ Related Work ============================
+\input{chapter/130_relatedwork.tex}
+
+
+% =============================== Threats ==============================
+\input{chapter/140_threats.tex}
+
+
+% ============================== Detection =============================
+\input{chapter/150_detection.tex}
+
+
+% ============================== Extension =============================
+\input{chapter/160_extension.tex}
+
+
+% ============================= Evaluation =============================
+\input{chapter/170_evaluation.tex}
+
+
+% ============================= Mitigations ============================
+\input{chapter/180_mitigation.tex}
+
+
+% ============================= Conclusion =============================
+\input{chapter/200_conclusion.tex}
+
+
+% ============================= Appendices =============================
+\input{chapter/900_appendices.tex}
+
+
+% ================================ Lists ===============================
+\begingroup
+    \footnotesize
+    \listoffigures
+    \addcontentsline{toc}{chapter}{List of Figures, Tables and Listings}
+    \let\clearpage\relax
+    \listoftables
+    \lstlistoflistings
+\endgroup
+
+
+% ============================== Acronyms ==============================
+\input{chapter/910_acronyms.tex}
+
+
+% ============================= References =============================
+\input{chapter/970_references.tex}
+
+
+% ====================== Eidesstattliche Erklärung =====================
+\input{chapter/980_eidesstattliche-erklaerung.tex}
+
+
+% ============================== Todo List =============================
+\listoftodos
+% \todototoc
+
+\end{document}

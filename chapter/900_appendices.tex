@@ -1,0 +1,114 @@
+\begin{appendices}
+
+
+%\chapter{Evaluation Results}
+
+\begin{landscape}
+    \label{sec.appendix}
+
+    % Increase chapter counter
+    \stepcounter{chapter}
+
+    \begin{table}
+    
+    % Add entry to TOC
+    \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}Evaluation Results}
+    \label{sec.appendix-evaluation}
+
+    \RawFloats
+    \parbox{.45\linewidth}{
+        \centering
+        \begin{tabular}{|r|l|}
+        \hline
+        Percentage & API Method \\
+        \hline
+        44.12 & \minline{history.pushState}\\
+        40.79 & \minline{history.replaceState}\\
+        13.64 & \minline{fetch}\\
+        11.88 & \minline{setTimeout}\\
+         8.22 & \minline{setInterval}\\
+         6.96 & \minline{Math.sinh}\\
+         6.76 & \minline{parseInt}\\
+         6.79 & \minline{requestAnimationFrame}\\
+         6.62 & \minline{clearTimeout}\\
+         6.57 & \minline{XMLHttpRequest}\\
+
+         6.43 & \minline{console.error}\\
+         6.39 & \minline{parseFloat}\\
+         5.70 & \minline{webkitRequestAnimationFrame}\\
+         4.90 & \minline{queueMicrotask}\\
+         4.68 & \minline{Promise}\\
+         4.06 & \minline{MutationObserver}\\
+         3.67 & \minline{getComputedStyle}\\
+         3.56 & \minline{console.log}\\
+         3.52 & \minline{console.warn}\\
+         3.37 & \minline{console.info}\\
+         2.84 & \minline{Request}\\
+         2.84 & \minline{console.debug}\\
+         2.49 & \minline{alert}\\
+         2.16 & \minline{confirm}\\
+         2.12 & \minline{clearInterval}\\
+        \hline
+        \end{tabular}
+        \caption{Top 25 most commonly modified APIs and percentage of affected domains}
+        \label{tab.apis}
+    }
+    \hfill{}
+    \parbox{.45\linewidth}{
+        \centering
+        \begin{tabular}{|r|l|}
+        \hline
+        Percentage & Domain \\
+        \hline
+        24.23 & googletagmanager.com\\
+        19.06 & facebook.net\\
+         4.90 & clarity.ms\\
+         4.34 & cloudflareinsights.com\\
+         2.57 & tiktok.com\\
+         2.56 & adobedtm.com\\
+         1.40 & outbrain.com\\
+         0.94 & driftt.com\\
+         0.92 & tinypass.com\\
+         0.91 & hsleadflows.net\\
+         0.65 & cloudflare.com\\
+         0.63 & perfectmarket.com\\
+         0.59 & hsforms.net\\
+         0.57 & visualwebsiteoptimizer.com\\
+         0.57 & hscollectedforms.net\\
+         0.53 & vimeo.com\\
+         0.52 & go-mpulse.net\\
+         0.52 & sentry-cdn.com\\
+         0.50 & yektanet.com\\
+         0.48 & quantummetric.com\\
+         0.48 & heapanalytics.com\\
+         0.47 & alicdn.com\\
+         0.46 & datadoghq-browser-agent.com\\
+         0.46 & realsrv.com\\
+         0.42 & foresee.com\\
+        \hline
+        \end{tabular}
+        \caption{Top 25 most common domains of scripts which modify browser APIs}
+        \label{tab.modifying-domains}
+    }
+
+    \end{table}
+
+\end{landscape}
+
+\chapter{Source Code and Licenses}
+
+The source code of the software developed as part of this thesis can be found here:
+
+\begin{itemize}
+	\item \url{https://github.com/irgendwr/wam-detector} (browser extension and automation scripts)
+	\item \url{https://github.com/irgendwr/bachelor-thesis} (source code of this document)
+	\item On the DVD included in the physical copy of this document
+\end{itemize}
+
+The code is licensed under the MIT license. A copy of the license is distributed alongside it.
+
+The text of this thesis, its \LaTeX{} source code and figures that do not include icons by Font Awesome (i.e.~\ref{fig.scope}, \ref{fig.browser-process-model}, \ref{fig.evaluation-overview}) are licensed under the \href{http://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution 4.0 International (CC BY 4.0) license}.
+
+Figures that include icons by Font Awesome (i.e.~\ref{fig.threat-model-components}, \ref{fig.browser-extension-context}, \ref{fig.automation}) are subject to the terms and conditions of the \href{https://fontawesome.com/license}{Font Awesome license} and licensed under the \href{http://creativecommons.org/licenses/by-nd/4.0/}{Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0) license}, provided that it does not conflict with the terms and conditions of the \href{https://fontawesome.com/license}{Font Awesome license}.
+
+\end{appendices}

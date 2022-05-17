@@ -1,0 +1,187 @@
+% Kodierung, Sprache, Patches
+\usepackage[T1]{fontenc}    % Ausgabekodierung; ermöglicht Akzente und Umlaute
+                            %  sowie korrekte Silbentrennung.
+\usepackage[utf8]{inputenc} % Erlaubt die direkte Eingabe spezieller Zeichen;
+                            %  utf8 muss die Eingabekodierung des Editors sein.
+\usepackage[english]{babel} % Englische Sprachanpassungen (z.B. Überschriften).
+\usepackage{microtype}      % Optimale Randausrichtung und Skalierung.
+\usepackage[
+    autostyle,
+]{csquotes}                 % Korrekte Anführungszeichen in der Literaturliste.
+\usepackage{scrhack}        % Verhindert Warnungen mit älteren Paketen.
+\usepackage[
+    newcommands
+]{ragged2e}                 % Verbesserte \ragged...Befehle
+\PassOptionsToPackage{
+    hyphens
+}{url}                      % Sorgt für URL-Umbrüche in Fußzeilen u. Literatur
+
+
+% Schriftarten
+\usepackage{mathptmx}       % Times; modifies the default serif and math fonts
+\usepackage[scaled=.92]{helvet}% modifies the sans serif font
+\usepackage{courier}        % modifies the monospace font
+
+
+% Biblatex
+\usepackage[
+    style=alphabetic,
+    backend=biber,
+    %backref=true
+]{biblatex}             % Biblatex mit alphabetischem Style und biber.
+%\bibliography{\jobname.bib} % Dateiname der bib-Datei.
+\DeclareFieldFormat*{title}{
+    \mkbibemph{#1}          % Make titles italics
+}
+
+
+% Dokument- und Texteinstellungen
+\usepackage[
+    a4paper,
+    margin=2.54cm,
+    marginparwidth=2.0cm,
+    footskip=1.0cm
+]{geometry}                 % Ersetzt 'a4wide'.
+\clubpenalty=10000          % Keine Einzelzeile am Beginn eines Absatzes
+                            %  (Schusterjungen).
+\widowpenalty=10000         % Keine Einzelzeile am Ende eines Absatzes
+\displaywidowpenalty=10000  %  (Hurenkinder).
+\usepackage{floatrow}       % Zentriert alle Floats
+\usepackage{ifdraft}        % Ermöglicht \ifoptionfinal{true}{false}
+\pagestyle{plain}           % keine Kopfzeilen
+% \sloppy                   % großzügige Formatierungsweise
+\deffootnote{1em}{1em}{
+  \thefootnotemark.\ }      % Verbessert Layout mehrzeiliger Fußnoten
+
+\makeatletter
+\AtBeginDocument{
+    \hypersetup{
+        pdftitle = {\@title},
+        pdfauthor = \@author,
+    }
+}
+\makeatother
+
+
+% Weitere Pakete
+\usepackage{graphicx}       % Einfügen von Graphiken.
+\usepackage{tabu}           % Einfügen von Tabellen.
+\usepackage{multirow}       % Tabellenzeilen zusammenfassen.
+\usepackage{multicol}       % Tabellenspalten zusammenfassen.
+\usepackage{booktabs}       % Schönere Tabellen (\toprule\midrule\bottomrule).
+\usepackage[nocut]{thmbox}  % Theorembox bspw. für Angreifermodell.
+\usepackage{amsmath}        % Erweiterte Handhabung mathematischer Formeln.
+\usepackage{amssymb}        % Erweiterte mathematische Symbole.
+\usepackage{rotating}
+\usepackage[
+    printonlyused
+]{acronym}                  % Abkürzungsverzeichnis
+\usepackage[
+    colorinlistoftodos,
+    textsize=tiny,          % Notizen und TODOs - mit der todonotes.sty von
+    \ifoptionfinal{disable}{}%  Benjamin Kellermann ist das Package "changebar"
+]{todonotes}                %  bereits integriert.
+\usepackage[
+    breaklinks,
+    hidelinks,
+    pdfdisplaydoctitle,
+    pdfpagemode = {UseOutlines},
+    pdfpagelabels,
+]{hyperref}                 % Sprungmarken im PDF. Lädt das URL-Paket.
+\urlstyle{rm}               % Entfernt die Formattierung von URLs.
+
+% Direktes Einfügen von Dateiinhalt. Wird hier für Verwendung
+% einer .bib-Datei in dieser .tex-Datei benötigt.
+%\usepackage{filecontents}
+
+%\usepackage{breakurl}
+%\def\UrlBreaks{\do\/\do-}
+
+\usepackage{listings}       % Spezielle Umgebung für Quelltextformatierung.
+\lstset{
+    language=C,
+    breaklines=true,
+    breakatwhitespace=true,
+    frame=l,            % Linie links: l, doppelt: L
+    framerule=2.5pt,    % Dicke der Linie
+    rulecolor=\color{gray},% Farbe der Linie
+    captionpos=b,
+    xleftmargin=6ex,
+    tabsize=4,
+    numbers=left,
+    numberstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bfseries\color{green!50!black},
+    commentstyle=\itshape\color{magenta!90!black},
+    identifierstyle=\ttfamily,
+    stringstyle=\color{orange!90!black},
+    showstringspaces=false,
+}
+
+% CUSTOM
+\usepackage{enumitem} % Used for description layout.
+\usepackage{wrapfig} % Allows wrapping text around figures and tables.
+\usepackage{tabularx}
+\usepackage[page,toc,title]{appendix} % Appendices
+\usepackage{pdflscape} % Landscape
+\usepackage{siunitx} % Formats numbers and (SI) units: https://ctan.org/pkg/siunitx
+\sisetup{
+	round-mode = places,
+	round-precision = 2
+}
+
+% Normal spacing between sentences.
+\frenchspacing
+
+% Capitalize chapter/section/subsection references.
+\addto\extrasenglish{
+  \def\chapterautorefname{Chapter}
+  \def\sectionautorefname{Section}
+  \def\subsectionautorefname{Subsection}
+}
+
+\renewcommand{\lstlistlistingname}{List of Listings}
+
+\def\minline{\lstinline[language={},keywordstyle={},commentstyle={},identifierstyle={},stringstyle={}]}
+
+\lstdefinelanguage{JavaScript}{
+    keywords={typeof, new, true, false, try, function, return, null, catch, switch, var, const, let, if, in, while, do, else, case, break},
+    ndkeywords={class, export, boolean, throw, implements, import, this},
+    sensitive=false,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]",
+    morestring=[b]`,
+    numberstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bfseries\color{green!50!black},
+    ndkeywordstyle=\color{darkgray}\bfseries,
+    commentstyle=\itshape\color{magenta!90!black},
+    identifierstyle=\ttfamily,
+    stringstyle=\color{orange!90!black},
+    showstringspaces=false,
+}
+
+\lstdefinelanguage{CSP}{
+    alsodigit={-},
+    keywords={child-src, connect-src, default-src, font-src, frame-src, img-src, manifest-src, media-src, object-src, prefetch-src, script-src, script-src-elem, script-src-attr, style-src, style-src-elem, style-src-attr, worker-src, base-uri, sandbox, form-action, frame-ancestors, navigate-to, report-uri, report-to, require-sri-for, require-trusted-types-for, trusted-types, upgrade-insecure-requests, block-all-mixed-content, plugin-types, referrer },
+    ndkeywords={none, self, strict-dynamic, report-sample, unsafe-inline, unsafe-eval, unsafe-hashes, unsafe-allow-redirects, sha256-, sha384-, sha512-, nonce- },
+    otherkeywords={;},
+    sensitive=false,
+    numberstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bfseries\color{green!50!black},
+    ndkeywordstyle=\color{darkgray}\bfseries,
+    commentstyle=\itshape\color{magenta!90!black},
+    identifierstyle=\ttfamily,
+    stringstyle=\color{orange!90!black},
+    showstringspaces=false,
+}
+
+% alias
+\newcommand{\icode}{\minline}
+\newcommand{\browserAPI}{\hyperref[sec.browserAPIs]{browser API}}
+\newcommand{\browserAPIs}{\hyperref[sec.browserAPIs]{browser APIs}}
+\newcommand{\BrowserAPI}{\hyperref[sec.browserAPIs]{Browser API}}
+\newcommand{\BrowserAPIs}{\hyperref[sec.browserAPIs]{Browser APIs}}

@@ -1,0 +1,31 @@
+\chapter{Mitigation and Best Practices}
+\label{sec.mitigation}
+
+This chapter provides recommendations that reduce the attack surface and improve security in order to mitigate the attacks presented in \autoref{sec.threats} and address issues uncovered in the evaluation results in \autoref{sec.findings}. The recommendations are divided into sections that address specific roles and responsibilities: \autoref{sec.mitigation.webdev} focuses on best practices for web developers, \autoref{sec.mitigation.webserver} provides recommendations for administrators on how to properly configure web servers and monitor web applications. Finally, \autoref{sec.mitigation.user} explains what users can do to protect themselves.
+
+\section{Best Practices for Web Developers}
+\label{sec.mitigation.webdev}
+
+Whenever possible, web developers should avoid including JavaScript libraries from external domains that are not guaranteed to be trustworthy to reduce the attack surface. Depending on the web application and target audience it might be necessary to include scripts from \acp{cdn} or service providers such as Google. If the content of included scripts is not expected to change, as is generally the case for content hosted on \acp{cdn}, web developers can configure security policies that prevent the execution of these scripts if their content was manipulated. This can be done by generating \ac{sri} hashes of the script files and adding those hashes to the \icode{integrity} attribute of the script elements. When the configured hash does not match the hash of the script, the browser will refuse to execute the code and show an error in the developer console. \cite{MozSRI}
+
+Furthermore, developers should minimize the amount of dependencies of their applications and carefully analyze libraries from third-parties to reduce the possibility of including malicious code. If polyfills are required, it should be ensured that polyfills only overwrite native browser \acp{api} when necessary. To verify the behavior of web applications and the libraries that they include, developers can use browser extensions such as the one implemented in \autoref{sec.browserExtension}.
+
+\section{Web Server Configuration and Application Monitoring}
+\label{sec.mitigation.webserver}
+
+To ensure a secure connection and prevent manipulation through \ac{mitm} attacks, web servers need to support \acs{https} and use valid certificates. As specified by the W3C, servers should honor the \icode{Upgrade-Insecure-Requests} header sent by browsers and redirect to a secure \acs{url} \cite{UpgradeInsecureRequests}. It is also important to configure secure settings for the \ac{tls} protocol. Mozilla provides a simple configuration generator that supports various server software including common web servers such as Apache and Nginx, which can be found here: \url{https://ssl-config.mozilla.org/}.
+
+\filbreak{}
+
+Furthermore, administrators should regularly perform automated scans of their web applications in order to make sure that scripts are only included from trusted domains and behave as expected. This could be done using the automation infrastructure described in \autoref{sec.automation-architecture}.
+
+Web servers should also configure security policies such as the \acs{csp} explained in \autoref{sec.csp} to limit the origins of where resources are allowed to be included from. The \acs{csp} also allows administrators to monitor the inclusion of disallowed resources through reports generated and sent by browsers that support the policy.
+
+
+
+\section{Advice for Users}
+\label{sec.mitigation.user}
+
+While users can use the browser extension implemented in \autoref{sec.browserExtension} to become aware of potentially harmful browser API overrides, deciding whether overrides are actually malicious unfortunately requires technical knowledge about the specific web application. It is, however, possible for users to reduce the likelyhood of manipulation by preventing the execution of JavaScript from domains that are known to be malicious.
+
+Browser extensions such as uBlock Origin can be used to block advertisements, trackers and scripts from malicious domains. Advertisement services not only pose a risk to the users privacy by collecting information, but also increase the attack surface when advertisements are not properly sandboxed and able to execute code that could override browser \acsp{api} of the page they are included in. As discovered through the evaluation in \autoref{sec.findings}, trackers commonly overwrite browser \acsp{api}, which can pose a security risk. As an alternative to uBlock, more advanced users can use extensions such as uMatrix to create granular filter rules based on the origin of included resources that can be configured to block the execution of third-party scripts unless explicitly allowed.

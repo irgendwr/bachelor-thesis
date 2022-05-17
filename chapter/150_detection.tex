@@ -1,0 +1,116 @@
+\chapter{Detection of Browser API Manipulation}
+\label{sec.detection}
+
+This chapter deals with the implementation of algorithms that can detect \browserAPI{} manipulation. These algorithms will be relevant for \autoref{sec.browserExtension}, where a browser extension is implemented that automatically analyzes web pages using these algorithms and presents their results to the user. The following sections describe possible approaches on how to implement these detection algorithms and compares their benefits and drawbacks. The first approach presented in \autoref{sec.detectionInterception} attempts to intercept code that overwrites \browserAPIs{}, while the second approach in \autoref{sec.detectionVerification} detects changes to \browserAPIs{} by continuosly verifying their integrity. The latter achieves this through two methods: The first method stores references of the original values and verifies whether the current state matches the references, and the second one scans \browserAPIs{} for built-in functions that have been replaced by a non built-in function.
+
+
+
+\section{Interception of Browser API Overrides}
+\label{sec.detectionInterception}
+
+The first approach to detect \browserAPI{} manipulation is to intercept code that wants to overwrite existing \acp{api}. While this could be done at different stages of the code execution pipeline, it is difficult to impossible to detect whether a script will overwrite certain properties at some point just from static analysis of the code. Static code analysis could easily be fooled by code obfuscation and would require complex syntactical parsing and code flow analysis. Instead, the approach presented here effectively performs a dynamic code analysis by making use of JavaScript's setter functions in order to intercept attempts at overwriting certain properties of the \hyperref[sec.globals]{global object} introduced in \autoref{sec.globals}.
+
+It is possible to add setter functions to properties of JavaScript objects using the method \icode{Object.defineProperty()}. Adding a setter function, however, prevents one from storing a value inside of the property. To make sure that the property still has the same value that it had before defining a setter function, we also need store the original value in another variable (referred to as the “shadow variable“ – not to be confused with “variable shadowing”), define a getter function that returns the value of the shadow variable and assign values received by the setter function to the same shadow variable. \cite{MozObjectDefineProperty}
+
+\autoref{lst.observeOverwrites} shows a function that implements the aforementioned steps and allows adding a hook function to an object's setter which will be called whenever a value is written to the specified property of the parent object. In line 9, a shadow variable is created, which keeps track of the value associated with the property. The function can then be used to observe specific \acp{api}, such as \icode{fetch}, by calling it as shown in listing \ref{lst.observeFetchOverwrite}. In this case, the hook function simply logs a warning message whenever a new value is assigned to fetch, including a stack trace of the code that was responsible for the value change.
+
+\filbreak{}
+
+\begin{lstlisting}[language=JavaScript,label={lst.observeOverwrites},caption={Function that can be used to observe overwrites of an object's property}]
+/**
+ * Observes overwrites of a property.
+ * @param {Object} obj Parent object
+ * @param {String} prop Property name
+ * @param {Function} hook Hook function.
+ */
+function observeProperty(obj, prop, hook) {
+    // Store original value in shadow variable
+    let shadow = obj[prop];
+    Object.defineProperty(obj, prop, {
+        // Define setter
+        set: value => {
+            // Call hook function
+            hook();
+            // Store value in shadow variable
+            shadow = value;
+        },
+        // Define getter to return value of shadow variable
+        get: () => shadow,
+    });
+};
+\end{lstlisting}
+
+\begin{lstlisting}[language=JavaScript,label={lst.observeFetchOverwrite},caption={Observing changes to the fetch API}]
+observeProperty(window, "fetch", () => {
+    console.warn("fetch was overwritten. Stack Trace:", (new Error()).stack);
+});
+\end{lstlisting}
+
+The approach demonstrated in this subsection has the benefit that changes are detected immediately and it is also possible to trace the callstack in order to find out what part of the code was responsible for overwriting an \ac{api}, which will be relevant for the implementation of the browser extension in \autoref{sec.browserExtension}.
+
+On the downside, this not only requires the definition of setter functions for every single property, but also copying all of the original values to shadow variables. It is also possible to circumvent the detection by using \icode{Object.defineProperty()} or \icode{Object.defineProperties()} to either remove the setters or overwrite the value directly.
+
+To improve the detection rate, one could additionally attach a hook to the aforementioned methods to intercept their use. This could be done using a helper function as shown in listing \ref{lst.hookFunction}, which simply replaces the specified property with another function that first calls the provided hook function, then calls the original function and returns its result. This helper function is then used in listing \ref{lst.hookDefineProperty}, which uses the helper function from listing \ref{lst.hookFunction} to attach hooks to \icode{Object.defineProperty()} and \icode{Object.defineProperties()} that log a warning with a stack trace whenever the methods are used to overwrite properties of the global \icode{window} object.
+
+\filbreak{}
+
+\begin{lstlisting}[language=JavaScript,label={lst.hookFunction},caption={Function that allows adding a hook to another function}]
+/**
+ * Adds a hook to a function.
+ * @param {Object} obj Parent object
+ * @param {String} prop Property name
+ * @param {Function} hook Hook function.
+ */
+function hookFunction(obj, prop, hook) {
+    // Store a reference to the original function
+    let originalFunction = obj[prop];
+    // Replace function
+    obj[prop] = (...args) => {
+        // Call hook
+        hook(...args);
+        // Call original function and return the result
+        return originalFunction(...args);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=JavaScript,label={lst.hookDefineProperty},caption={Adding hooks to \icode{Object.defineProperty()} and \icode{Object.defineProperties()}}]
+hookFunction(Object, 'defineProperty', (obj, prop, descriptor) => {
+    if (obj !== window) return;
+    console.warn(prop+" was overwritten. Stack Trace:", (new Error()).stack);
+});
+hookFunction(Object, 'defineProperties', (obj, props) => {
+    if (obj !== window) return;
+    console.warn("Multiple properties overwritten:", Object.keys(props), "Stack Trace:", (new Error()).stack);
+});
+\end{lstlisting}
+
+\section{Integrity Verification of Browser APIs}
+\label{sec.detectionVerification}
+
+The second approach to detecting \browserAPI{} manipulation is to verify the integrity of the associated JavaScript objects and functions instead of intercepting code. A possible solution for achieving this would be to store references of the initial state and then continuously compare them to the current values. The downside of this approach is the computational and memory overhead required to copy, store and compare the references and that – compared to the first approach – this does not immediately detect manipulation, but instead requires actively scanning the \acp{api} for changes to their values.
+
+Functions provided by the browser can alternatively also be verified by checking their string representation. The \icode{toString()} method of the \minline{Function.prototype} returns the string representation of a function \cite{ECMA262}, which generally matches the source code of the function object. However, in the case of built-in function objects this function returns an implementation-defined string \cite{ECMA262}, which can be used to verify that a function is built-in and thus not modified.
+
+As the specification only defines the syntax of the string representation of built-in function objects, the exact representation is only guaranteed to be consistent within a browser. The following code shown in \autoref{lst.builtinFuncString} can be used to generate the expected string representation independently of the browser it is running in.
+
+\begin{lstlisting}[language=JavaScript,showstringspaces=true,label={lst.builtinFuncString},caption={Generating the expected string representation of built-in function objects}]
+// Store a trusted reference to Function.prototype.toString
+const funcToString = Function.prototype.toString;
+
+/**
+ * Returns the expected string representation of built-in functions.
+ * @param {String} name Name of the function.
+ * @returns {String}
+ */
+function builtinFuncString(name) {
+    // Browser independent:
+    return funcToString.apply(funcToString).replace("toString", name);
+    // Chromium:
+    return `function ${name}() { [native code] }`;
+    // Firefox:
+    return `function ${name}() {\n    [native code]\n}`;
+}
+\end{lstlisting}
+
+However, this method of verification requires handling some special cases where the internal function name is different from the name of the \icode{window} object property that it is assigned to. This can occur on properties that are aliases of an \ac{api}, such as \icode{WebKitCSSMatrix} for example, which is an alias of \icode{DOMMatrix}. As these aliases behave like pointers, the internal name of the function does not reflect the property name of an alias. Chromium also provides \acp{api} that do not have an internal name in their string representation, such as \minline{chrome.loadTimes}.

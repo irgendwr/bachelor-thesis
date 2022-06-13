@@ -1,0 +1,220 @@
+\mode<presentation>
+
+\usepackage[scaled]{helvet}
+\usepackage{tikz}
+
+% Captions in Abbildungen unterdrücken (relevant beim Übersetzen mit pandoc)
+\usepackage[labelformat=empty, textformat=empty]{caption}
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Tab.}
+
+% Navigationsleiste ausblenden
+\beamertemplatenavigationsymbolsempty
+
+% Ränder definieren
+\setbeamersize{text margin left=5ex, text margin right=5ex}
+\setlength{\leftmargini}{0.965em}
+
+% Farbdefinitionen
+\definecolor{svsgrau1}{RGB}{191,191,191} % Balken in Kopfzeile
+\definecolor{svsgrau2}{RGB}{123,123,123} % Folienüberschriften
+\definecolor{uhhrot}{RGB}{193,34,42} % etwas dunkeres Rot
+\definecolor{svshellblau1}{RGB}{153,204,255} % Block Hintergrund
+\definecolor{svshellblau2}{RGB}{24,113,248} % Anstrich Ebene 2
+\definecolor{svsdunkelblau}{RGB}{38,82,128} % Text der Ebene 1
+
+% Farben der Bullets der Ebenen
+\setbeamercolor{itemize item}{fg=uhhrot}
+\setbeamercolor{itemize subitem}{fg=svshellblau2}
+\setbeamercolor{enumerate item}{parent=itemize item}
+\setbeamercolor{enumerate subitem}{parent=itemize subitem}
+
+% Formen der Bullets der Ebenen
+\setbeamertemplate{itemize item}{\raisebox{0.175em}{\scalebox{0.53}{$\blacksquare$}}}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{itemize subsubitem}[circle]
+
+% Farben der Texte
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{structure}{fg=svsgrau2}
+\setbeamercolor{section in toc}{fg=black}
+\setbeamercolor{framesubtitle}{fg=svsdunkelblau}
+\setbeamercolor{itemize/enumerate body}{fg=svsdunkelblau}
+\setbeamercolor{itemize/enumerate subbody}{fg=black}
+\setbeamercolor{itemize/enumerate subsubbody}{fg=black}
+\setbeamercolor{alerted text}{fg=uhhrot}
+
+% Zeichensätze der Texte
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\normalsize}
+\setbeamerfont{date}{size=\normalsize}
+\setbeamerfont{frametitle}{size=\large}
+\setbeamerfont{framesubtitle}{size=\footnotesize\raggedleft}
+\setbeamerfont{sections/subsections in toc}{size=\normalsize}
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}
+
+% Definitionen für farbig hinterlegten Block
+\setbeamertemplate{blocks}[rounded]
+\setbeamercolor{block title}{fg=black}
+\setbeamercolor{block title alerted}{fg=black,bg=svshellblau1}
+\setbeamercolor{block body alerted}{bg=svshellblau1!25!bg}
+\setbeamerfont{block title}{size=\normalsize}
+\setbeamerfont{block body}{size=\normalsize}
+
+% Definitionen für Agenda
+\defbeamertemplate{section in toc}{circle unnumbered}{
+	\leavevmode\usebeamertemplate*{itemize item}%
+	\kern1.25ex{\usebeamercolor[fg]{itemize/enumerate body}\inserttocsection}\par%
+}
+\defbeamertemplate{subsection in toc}{hyphen}{
+	\leavevmode\leftskip=2em\usebeamertemplate*{itemize subitem}%
+	\kern1.25ex{\usebeamercolor[fg]{itemize/enumerate subbody}\inserttocsubsection}\par%
+}
+\setbeamertemplate{section in toc}[circle unnumbered]
+\setbeamertemplate{subsection in toc}[hyphen]
+
+% Das pandoc-Template erzeugt die Gliederung mit \begin{frame}[allowframebreaks]. Das allowframebreaks erzeugt hinter "Agenda" ein "I" (frametitle continuation), das wir unterdrücken:
+\setbeamertemplate{frametitle continuation}{}
+
+% Das pandoc-Template benutzt \tableofcontents[hideallsubsections] zur Erzeugung der Gliederung. Daher werden in der Markdown-Version nur die Überschriften der ersten Ebene (#) im Inhaltsverzeichnis angezeigt. Die normalerweise bei Verwendung von pandoc erzeugten Zwischenfolien für jede Überschrift der ersten Ebene werden im Theme unterdrückt mit: 
+\AtBeginSection{}
+
+% Kopfzeile
+\setbeamertemplate{headline}{
+	\rule{0pt}{15mm}%
+	{\color{svsgrau1}\rule{\paperwidth}{1pt}}%
+	\newline\vspace{-8mm}%
+}
+
+% Fusszeile
+\setbeamertemplate{footline}[text line]{
+	\ifnum\theframenumber=1
+		% This is the title frame, do nothing
+		% Source: https://tex.stackexchange.com/questions/18828/how-to-remove-footline-on-the-title-page-of-beamer-slides
+	\else
+		\parbox[b]{50mm}{\insertframenumber\\[1ex]}
+	\fi
+}
+
+% Frame title -- modified version from
+%     macros/latex/contrib/beamer/base/themes/outer/beamerouterthemedefault.sty
+% 09.08.2021: Es wird der framesubtitle jetzt rechts auf Höhe des frametitle angezeigt.
+\defbeamertemplate*{frametitle}{svs}[1][left]
+{%
+  \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  \@tempdima=\textwidth%
+  \advance\@tempdima by\beamer@leftmargin%
+  \advance\@tempdima by\beamer@rightmargin%
+  \begin{beamercolorbox}[sep=0.3cm,#1,wd=\the\@tempdima]{frametitle}
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-1ex\hspace{1.3em}%
+    \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+    \strut\insertframetitle\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+      \else%
+      {\vskip-2ex\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\strut\insertframesubtitle\strut\hspace*{2ex}\par\vskip2ex}%
+      \fi
+    }%
+    \vskip-1ex%
+    \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  \end{beamercolorbox}%
+}
+
+% Title page -- modified version from
+%     macros/latex/contrib/beamer/base/themes/inner/beamerinnerthemedefault.sty
+\defbeamertemplate*{title page}{svs}[1][]{
+	\begin{tikzpicture}[remember picture,overlay]
+		\fill[white]
+		(current page.north west) rectangle (current page.south east);
+		\fill[svsgrau1]
+		([yshift=-22mm]current page.north west) rectangle (current page.south east);
+		\node[inner sep=0pt] (uhh) at ([xshift=22mm,yshift=-10mm]current page.north west) {\includegraphics[width=3cm]{img/up-uhh-logo-u-2010-u-farbe-u-rgb.pdf}};
+	\end{tikzpicture}
+	\par
+	\vskip15mm
+	\vbox{}
+	\vfill
+	\begingroup
+		\begin{beamercolorbox}[sep=8pt,#1]{title}
+		\usebeamerfont{title}\inserttitle\par%
+		\ifx\insertsubtitle\@empty%
+		\else%
+		\vskip0.25em%
+		{\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+		\fi%
+		\end{beamercolorbox}%
+		\vskip1em\par
+		\begin{beamercolorbox}[sep=8pt,#1]{author}
+		\usebeamerfont{author}\insertauthor
+		\end{beamercolorbox}
+		\begin{beamercolorbox}[sep=8pt,#1]{institute}
+		\usebeamerfont{institute}\insertinstitute
+		\end{beamercolorbox}
+		\begin{beamercolorbox}[sep=8pt,#1]{date}
+		\usebeamerfont{date}\insertdate
+		\end{beamercolorbox}\vskip0.5em
+		{\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+	\endgroup
+	\vfill
+}
+
+\mode<all>
+
+% Listings
+\usepackage{listings}
+\lstset{
+    language=C,
+    breaklines=true,
+    breakatwhitespace=true,
+    frame=l,            % Linie links: l, doppelt: L
+    framerule=2.5pt,    % Dicke der Linie
+    rulecolor=\color{svsgrau2},% Farbe der Linie
+    captionpos=b,
+    xleftmargin=6ex,
+    tabsize=4,
+    numbers=left,
+    numberstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bfseries\color{svsdunkelblau},
+    commentstyle=\itshape\color{black},
+    identifierstyle=\ttfamily,
+    stringstyle=\color{black},
+    showstringspaces=false,
+}
+\lstdefinelanguage{JavaScript}{
+    keywords={typeof, new, true, false, try, function, return, null, catch, switch, var, const, let, if, in, while, do, else, case, break},
+    ndkeywords={class, export, boolean, throw, implements, import, this},
+    sensitive=false,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]",
+    morestring=[b]`,
+    numberstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bfseries\color{svsdunkelblau},
+    ndkeywordstyle=\color{svsdunkelblau}\bfseries,
+    commentstyle=\itshape\color{black},
+    identifierstyle=\ttfamily,
+    stringstyle=\bfseries\color{svsdunkelblau},
+    showstringspaces=false,
+}
+
+\lstdefinelanguage{CSP}{
+    alsodigit={-},
+    keywords={child-src, connect-src, default-src, font-src, frame-src, img-src, manifest-src, media-src, object-src, prefetch-src, script-src, script-src-elem, script-src-attr, style-src, style-src-elem, style-src-attr, worker-src, base-uri, sandbox, form-action, frame-ancestors, navigate-to, report-uri, report-to, require-sri-for, require-trusted-types-for, trusted-types, upgrade-insecure-requests, block-all-mixed-content, plugin-types, referrer },
+    ndkeywords={none, self, strict-dynamic, report-sample, unsafe-inline, unsafe-eval, unsafe-hashes, unsafe-allow-redirects, sha256-, sha384-, sha512-, nonce- },
+    otherkeywords={;},
+    sensitive=false,
+    numberstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\bfseries\color{svsdunkelblau},
+    ndkeywordstyle=\color{svsdunkelblau}\bfseries,
+    commentstyle=\itshape\color{black},
+    identifierstyle=\ttfamily,
+    stringstyle=\color{svsdunkelblau},
+    showstringspaces=false,
+}

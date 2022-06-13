@@ -12,6 +12,10 @@ hinweiseabschlussarbeit.pdf
 expose.pdf
 thesis.pdf
 thesis*.pdf
+presentation/presentation.pdf
+
+presentation/presentation-template.tex
+presentation/TemplateSlides2019.pptx
 
 # ignore generated files
 *.aux
@@ -34,6 +38,11 @@ thesis*.pdf
 *.lof
 *.lol
 *.lot
+# latex beamer generated files
+*.vrb
+*.snm
+*.nav
+*.pdfpc
 
 # directory settings/icon
 .directory
